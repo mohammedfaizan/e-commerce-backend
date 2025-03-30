@@ -2,7 +2,7 @@ import Order from "../models/order.model.js";
 
 const newOrder = async (req, res) => {
   try {
-    const { userName, items, totalPrice } = req.body;
+    const { userName, items, totalPrice, status } = req.body;
 
     if (!userName || !items || !totalPrice)
       return res
@@ -14,6 +14,7 @@ const newOrder = async (req, res) => {
       userName,
       items,
       totalPrice,
+      status: status || "pending",
     });
 
     res.status(200).json({ success: true, message: "it works", newBook });
@@ -49,7 +50,7 @@ const updateOrder = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "id is required" });
-    const { userName, items, totalPrice } = req.body;
+    const { userName, items, totalPrice, status } = req.body;
 
     const order = await Order.findById(id);
 
@@ -61,6 +62,7 @@ const updateOrder = async (req, res) => {
     if (userName) order.userName = userName;
     if (items) order.items = items;
     if (totalPrice) order.totalPrice = totalPrice;
+    if (status) order.status = status;
 
     const updatedOrder = await order.save();
 
